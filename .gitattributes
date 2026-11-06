@@ -1,0 +1,23 @@
+# Normalize text files to LF
+* text=auto
+
+# Source code and configuration
+*.php text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.lock text eol=lf
+*.sh text eol=lf
+*.env text eol=lf
+Dockerfile text eol=lf
+
+# Windows scripts
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.pdf binary
+*.zip binary

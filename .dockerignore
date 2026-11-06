@@ -1,0 +1,11 @@
+.git
+.gitignore
+.vscode
+.idea
+
+app/vendor
+app/var
+app/.env.local
+app/.env.*.local
+
+api-tests

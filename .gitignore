@@ -1,0 +1,24 @@
+# IDE and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# PHP / Composer
+/app/vendor/
+
+# Symfony runtime
+/app/var/
+
+# Local environment and secrets
+/app/.env.local
+/app/.env.*.local
+/app/config/secrets/*/*.decrypt.private.php
+/app/.env.dev
+
+# Docker local overrides
+/compose.override.yaml
+
+# Local files and uploads
+/app/var/uploads/
+/uploads/
