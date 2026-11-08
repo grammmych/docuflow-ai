@@ -15,6 +15,7 @@ Thumbs.db
 /app/.env.*.local
 /app/config/secrets/*/*.decrypt.private.php
 /app/.env.dev
+/.env
 
 # Docker local overrides
 /compose.override.yaml
