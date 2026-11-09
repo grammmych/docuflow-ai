@@ -9,11 +9,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Entity\Document;
 use App\Repository\DocumentRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Service\DocumentService;
-use LDAP\Result;
 
 final class DocumentController extends AbstractController
 {
@@ -65,10 +62,17 @@ final class DocumentController extends AbstractController
         return $this->json($result);
     }
 
-    #[Route('/api/documents/{id}', methods: ['GET'])]
+    #[Route('/api/documents/{id}', name: 'api_documents_show', requirements: ['id' => '\d+'], methods: ['GET'], format: 'json')]
     public function show(int $id, DocumentRepository $documentRepository): JsonResponse
     {
         $document = $documentRepository->find($id);
+
+        if ($document === null) {
+            return $this->json(
+                ['error' => 'Document not found'],
+                Response::HTTP_NOT_FOUND
+            );
+        }
 
         $result = [
             'id' => $document->getId(),
