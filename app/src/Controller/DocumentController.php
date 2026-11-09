@@ -34,7 +34,7 @@ final class DocumentController extends AbstractController
 
         return $this->json(
             [
-                'id' => $document->getId(),
+                'uuid' => $document->getUuid(),
                 'filename' => $document->getFilename(),
                 'status' => $document->getStatus(),
                 'createdAt' => $document->getCreatedAt()?->format(\DateTimeInterface::ATOM),
@@ -52,7 +52,7 @@ final class DocumentController extends AbstractController
 
         foreach ($documents as $document) {
             $result[] = [
-                'id' => $document->getId(),
+                'uuid' => $document->getUuid(),
                 'filename' => $document->getFilename(),
                 'status' => $document->getStatus(),
                 'createdAt' => $document->getCreatedAt()?->format(\DateTimeInterface::ATOM),
@@ -62,10 +62,10 @@ final class DocumentController extends AbstractController
         return $this->json($result);
     }
 
-    #[Route('/api/documents/{id}', name: 'api_documents_show', requirements: ['id' => '\d+'], methods: ['GET'], format: 'json')]
-    public function show(int $id, DocumentRepository $documentRepository): JsonResponse
+    #[Route('/api/documents/{uuid}', name: 'api_documents_show', methods: ['GET'], format: 'json')]
+    public function show(string $uuid, DocumentRepository $documentRepository): JsonResponse
     {
-        $document = $documentRepository->find($id);
+        $document = $documentRepository->findOneBy(['uuid' => $uuid]);
 
         if ($document === null) {
             return $this->json(
@@ -75,7 +75,7 @@ final class DocumentController extends AbstractController
         }
 
         $result = [
-            'id' => $document->getId(),
+            'uuid' => $document->getUuid(),
             'filename' => $document->getFilename(),
             'status' => $document->getStatus(),
             'createdAt' => $document->getCreatedAt()?->format(\DateTimeInterface::ATOM),

@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\DocumentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Bridge\Doctrine\Types\UuidType;
 
 #[ORM\Entity(repositoryClass: DocumentRepository::class)]
 #[ORM\Table(name: 'documents')]
@@ -12,6 +14,7 @@ class Document
 
     public function __construct()
     {
+        $this->uuid = Uuid::v7();
         $this->status = 'uploaded';
         $this->createdAt = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
     }
@@ -20,6 +23,9 @@ class Document
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    private Uuid $uuid;
 
     #[ORM\Column(length: 255)]
     private ?string $filename = null;
@@ -33,6 +39,11 @@ class Document
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getUuid(): Uuid
+    {
+        return $this->uuid;
     }
 
     public function getFilename(): ?string
