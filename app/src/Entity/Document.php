@@ -30,6 +30,10 @@ class Document
     #[ORM\Column(length: 255)]
     private ?string $filename = null;
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'owner_id', referencedColumnName: 'id', nullable: false)]
+    private ?User $owner = null;
+
     #[ORM\Column(length: 20)]
     private ?string $status = null;
 
@@ -78,6 +82,17 @@ class Document
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(User $owner): static
+    {
+        $this->owner = $owner;
 
         return $this;
     }
