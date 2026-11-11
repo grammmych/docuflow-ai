@@ -16,7 +16,6 @@ http:
         "email": "test@example.com",
         "password": "testpass123"
       }
-  auth: inherit
 
 settings:
   encodeUrl: true

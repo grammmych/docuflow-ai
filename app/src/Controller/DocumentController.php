@@ -7,10 +7,12 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\DocumentRepository;
 use App\Service\DocumentService;
+use App\Security\Voter\DocumentVoter;
 
 final class DocumentController extends AbstractController
 {
@@ -28,8 +30,17 @@ final class DocumentController extends AbstractController
             );
         }
 
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            return $this->json(
+                ['error' => 'Unauthorized'],
+                Response::HTTP_UNAUTHORIZED
+            );
+        }
+
         $document = $documentService->create(
-            trim($data['filename'])
+            trim($data['filename']),
+            $user
         );
 
         return $this->json(
@@ -46,7 +57,15 @@ final class DocumentController extends AbstractController
     #[Route('/api/documents', name: 'api_documents_list', methods: ['GET'])]
     public function list(DocumentService $documentService): JsonResponse
     {
-        $documents = $documentService->findAll();
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            return $this->json(
+                ['error' => 'Unauthorized'],
+                Response::HTTP_UNAUTHORIZED
+            );
+        }
+
+        $documents = $documentService->findByOwner($user);
 
         $result = [];
 
@@ -68,6 +87,13 @@ final class DocumentController extends AbstractController
         $document = $documentRepository->findOneBy(['uuid' => $uuid]);
 
         if ($document === null) {
+            return $this->json(
+                ['error' => 'Document not found'],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        if (!$this->isGranted(DocumentVoter::VIEW, $document)) {
             return $this->json(
                 ['error' => 'Document not found'],
                 Response::HTTP_NOT_FOUND

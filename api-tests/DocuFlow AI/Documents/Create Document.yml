@@ -13,7 +13,7 @@ http:
     type: json
     data: |-
       {
-        "filename": "ubuntu-bruno-test.pdf"
+        "filename": "test-bruno-555.pdf"
       }
   auth: inherit
 
